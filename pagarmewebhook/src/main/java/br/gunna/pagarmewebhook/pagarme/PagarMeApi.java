@@ -1,7 +1,6 @@
 package br.gunna.pagarmewebhook.pagarme;
 
-import br.com.ioasys.cuidar_de_todos.androidapp.Constants;
-import br.com.ioasys.cuidar_de_todos.androidapp.service.model.response.PagarMeResponse;
+ 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

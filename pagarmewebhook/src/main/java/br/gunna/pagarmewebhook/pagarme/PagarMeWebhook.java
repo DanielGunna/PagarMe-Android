@@ -118,6 +118,10 @@ public class PagarMeWebhook {
         return new RuntimeException(new Throwable("Field " + field + "cant be empty!!"));
     }
 
+    private Exception getUnexpectedErrorException() {
+        return new Exception(new Throwable("Unexpected error pagarme response =  null "));
+    }
+
 
     private void generateKeyHash(final PagarMeListener listener) {
         getPublicKey(new Callback<PagarMeResponse>() {
@@ -125,16 +129,20 @@ public class PagarMeWebhook {
             public void onResponse(Call<PagarMeResponse> call, Response<PagarMeResponse> response) {
                 if (response.code() == 200) {
                     try {
-                        final String cardHash = buildCardHash(response.body());
-                        listener.onSuccess(cardHash);
+                        if (response.body() != null) {
+                            final String cardHash = buildCardHash(response.body());
+                            listener.onSuccess(mRequest, response.body(), cardHash);
+                        } else {
+                            listener.onError(getUnexpectedErrorException());
+                        }
                     } catch (Exception e) {
                         listener.onError(e);
                     }
                 } else {
                     listener.onError(new Exception(
-                            new Throwable(
-                                    "PagarMeService:/Error generating card hash: "
-                                            + response.code() + " " + response.message())
+                                    new Throwable(
+                                            "PagarMeService:/Error generating card hash: "
+                                                    + response.code() + " " + response.message())
                             )
                     );
                 }
@@ -182,7 +190,7 @@ public class PagarMeWebhook {
     }
 
     public interface PagarMeListener {
-        void onSuccess(String cardHash);
+        void onSuccess(PagarMeRequest cardRequest, PagarMeResponse response, String cardHash);
 
         void onError(Exception e);
     }

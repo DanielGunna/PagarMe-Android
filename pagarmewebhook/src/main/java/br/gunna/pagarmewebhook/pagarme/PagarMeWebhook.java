@@ -37,7 +37,8 @@ public class PagarMeWebhook {
 
     public static PagarMeWebhook getsInstance() {
         if (sInstance == null)
-            throw new RuntimeException("You must initialize calling PagarMeWebhook.initialize(apiKey) !!!");
+            throw new RuntimeException("You must initialize calling" +
+                    " PagarMeWebhook.initialize(apiKey) !!!");
         return sInstance;
     }
 
@@ -81,7 +82,8 @@ public class PagarMeWebhook {
             if (checkFieldsRequest(listener))
                 generateKeyHash(listener);
         } else
-            listener.onError(new RuntimeException("You must provide a valid non-empty PagarMe api key !! "));
+            listener.onError(new RuntimeException("You must provide a valid" +
+                    " non-empty PagarMe api key !! "));
     }
 
     private boolean checkFieldsRequest(PagarMeListener listener) {

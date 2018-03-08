@@ -48,6 +48,7 @@ public class PagarMeWebhook {
 
     public PagarMeWebhook number(String value) {
         mRequest.setNumber(value);
+        mRequest.setBrand(CardUtils.getCreditCardBrand(value));
         return this;
     }
 
@@ -75,13 +76,7 @@ public class PagarMeWebhook {
     }
 
 
-    public PagarMeWebhook brand(String value) {
-        mRequest.setBrand(value);
-        return this;
-    }
-
-
-    public void generateCardHash(Listener listener) {
+    public void generateCardHash(PagarMeListener listener) {
         if (!TextUtils.isEmpty(mKey)) {
             if (checkFieldsRequest(listener))
                 generateKeyHash(listener);
@@ -89,12 +84,42 @@ public class PagarMeWebhook {
             listener.onError(new RuntimeException("You must provide a valid non-empty PagarMe api key !! "));
     }
 
-    private boolean checkFieldsRequest(Listener listener) {
+    private boolean checkFieldsRequest(PagarMeListener listener) {
+        if (TextUtils.isEmpty(mRequest.getNumber())) {
+            listener.onError(getEmptyFieldException("Card number"));
+            return false;
+        }
+        if (TextUtils.isEmpty(mRequest.getHolderName())) {
+            listener.onError(getEmptyFieldException("Holder name"));
+            return false;
+        }
+        if (TextUtils.isEmpty(mRequest.getExpirationDate())) {
+            listener.onError(getEmptyFieldException("Expiration date"));
+            return false;
+        }
+        if (TextUtils.isEmpty(mRequest.getCvv())) {
+            listener.onError(getEmptyFieldException("CVV"));
+            return false;
+        }
+        if (TextUtils.isEmpty(mRequest.getBrand())) {
+            listener.onError(getEmptyFieldException("Brand"));
+            return false;
+        }
+
+        if (CardUtils.checkCreditCard(mRequest.getNumber())) {
+            listener.onError(new RuntimeException(new Throwable("Invalid card number !!")));
+            return false;
+        }
+
         return true;
     }
 
+    private Exception getEmptyFieldException(String field) {
+        return new RuntimeException(new Throwable("Field " + field + "cant be empty!!"));
+    }
 
-    private void generateKeyHash(final Listener listener) {
+
+    private void generateKeyHash(final PagarMeListener listener) {
         getPublicKey(new Callback<PagarMeResponse>() {
             @Override
             public void onResponse(Call<PagarMeResponse> call, Response<PagarMeResponse> response) {
@@ -106,7 +131,12 @@ public class PagarMeWebhook {
                         listener.onError(e);
                     }
                 } else {
-                    listener.onError(new Exception(new Throwable("PagarMeService:/Error generating card hash: " + response.code() + " " + response.message())));
+                    listener.onError(new Exception(
+                            new Throwable(
+                                    "PagarMeService:/Error generating card hash: "
+                                            + response.code() + " " + response.message())
+                            )
+                    );
                 }
             }
 
@@ -151,7 +181,7 @@ public class PagarMeWebhook {
         return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
     }
 
-    public interface Listener {
+    public interface PagarMeListener {
         void onSuccess(String cardHash);
 
         void onError(Exception e);

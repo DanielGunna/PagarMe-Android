@@ -41,12 +41,58 @@ public class PagarMeWebhook {
         return sInstance;
     }
 
+    public PagarMeWebhook holderName(String value) {
+        mRequest.setHolderName(value);
+        return this;
+    }
+
+    public PagarMeWebhook number(String value) {
+        mRequest.setNumber(value);
+        return this;
+    }
+
+
+    public PagarMeWebhook expirationDate(String value) {
+        mRequest.setExpirationDate(value);
+        return this;
+    }
+
+
+    public PagarMeWebhook cvv(String value) {
+        mRequest.setCvv(value);
+        return this;
+    }
+
+    public PagarMeWebhook telephone(String value) {
+        mRequest.setTelephone(value);
+        return this;
+    }
+
+
+    public PagarMeWebhook ddd(String value) {
+        mRequest.setDdd(value);
+        return this;
+    }
+
+
+    public PagarMeWebhook brand(String value) {
+        mRequest.setBrand(value);
+        return this;
+    }
+
+
     public void generateCardHash(Listener listener) {
-        if (!TextUtils.isEmpty(mKey))
-            generateKeyHash(listener);
-        else
+        if (!TextUtils.isEmpty(mKey)) {
+            if (checkFieldsRequest(listener))
+                generateKeyHash(listener);
+        } else
             listener.onError(new RuntimeException("You must provide a valid non-empty PagarMe api key !! "));
     }
+
+    private boolean checkFieldsRequest(Listener listener) {
+        return true;
+    }
+
 
     private void generateKeyHash(final Listener listener) {
         getPublicKey(new Callback<PagarMeResponse>() {

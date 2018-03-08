@@ -2,6 +2,8 @@ package br.gunna.pagarmewebhook;
 
 import org.junit.Test;
 
+import br.gunna.pagarmewebhook.pagarme.PagarMeWebhook;
+
 import static org.junit.Assert.*;
 
 /**

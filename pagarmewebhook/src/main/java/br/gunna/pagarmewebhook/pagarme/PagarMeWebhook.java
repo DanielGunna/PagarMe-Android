@@ -101,7 +101,7 @@ public class PagarMeWebhook {
                 if (response.code() == 200) {
                     try {
                         final String cardHash = buildCardHash(response.body());
-                        listener.onSucess(cardHash);
+                        listener.onSuccess(cardHash);
                     } catch (Exception e) {
                         listener.onError(e);
                     }
@@ -132,7 +132,7 @@ public class PagarMeWebhook {
                         + "&card_cvv=%s"
                         + "&brand=%s",
                 mRequest.getNumber(), mRequest.getHolderName(), mRequest.getExpirationDate(),
-                mRequest.getCvv(), mRequest.getTelephone(), mRequest.getDdd(), mRequest.getBrand());
+                mRequest.getCvv(), mRequest.getBrand());
         final String encryptedData = encrypt(cardData, publicKey);
         return String.format("%s_%s", publicKeyId, encryptedData);
     }
@@ -152,7 +152,7 @@ public class PagarMeWebhook {
     }
 
     public interface Listener {
-        void onSucess(String cardHash);
+        void onSuccess(String cardHash);
 
         void onError(Exception e);
     }

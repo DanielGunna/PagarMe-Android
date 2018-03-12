@@ -1,4 +1,4 @@
-package br.gunna.pagarmewebhook.pagarme;
+package br.gunna.pagarmeandroid.pagarme;
 
 /**
  * Created by Gunna on 07/03/2018.

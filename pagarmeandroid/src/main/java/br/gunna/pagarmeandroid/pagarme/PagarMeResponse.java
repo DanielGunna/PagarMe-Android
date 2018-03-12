@@ -1,4 +1,4 @@
-package br.gunna.pagarmewebhook.pagarme;
+package br.gunna.pagarmeandroid.pagarme;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

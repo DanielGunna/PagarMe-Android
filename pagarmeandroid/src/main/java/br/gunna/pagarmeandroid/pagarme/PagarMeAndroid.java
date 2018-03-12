@@ -1,4 +1,4 @@
-package br.gunna.pagarmewebhook.pagarme;
+package br.gunna.pagarmeandroid.pagarme;
 
 import android.text.TextUtils;
 import android.util.Base64;
@@ -17,13 +17,13 @@ import retrofit2.Response;
  * Created by Gunna on 08/03/2018.
  */
 
-public class PagarMeWebhook {
+public class PagarMeAndroid {
     private PagarMeRequest mRequest;
     private PagarMeApi mApiService;
-    private static PagarMeWebhook sInstance;
+    private static PagarMeAndroid sInstance;
     private String mKey;
 
-    private PagarMeWebhook(String key) {
+    private PagarMeAndroid(String key) {
         mRequest = new PagarMeRequest();
         mApiService = PagarMeService.getServiceInstance();
         mKey = key;
@@ -31,47 +31,47 @@ public class PagarMeWebhook {
 
 
     public static void initialize(String key) {
-        sInstance = new PagarMeWebhook(key);
+        sInstance = new PagarMeAndroid(key);
     }
 
 
-    public static PagarMeWebhook getsInstance() {
+    public static PagarMeAndroid getsInstance() {
         if (sInstance == null)
             throw new RuntimeException("You must initialize calling" +
-                    " PagarMeWebhook.initialize(apiKey) !!!");
+                    " PagarMeAndroid.initialize(apiKey) !!!");
         return sInstance;
     }
 
-    public PagarMeWebhook holderName(String value) {
+    public PagarMeAndroid holderName(String value) {
         mRequest.setHolderName(value);
         return this;
     }
 
-    public PagarMeWebhook number(String value) {
+    public PagarMeAndroid number(String value) {
         mRequest.setNumber(value);
         mRequest.setBrand(CardUtils.getCreditCardBrand(value));
         return this;
     }
 
 
-    public PagarMeWebhook expirationDate(String value) {
+    public PagarMeAndroid expirationDate(String value) {
         mRequest.setExpirationDate(value);
         return this;
     }
 
 
-    public PagarMeWebhook cvv(String value) {
+    public PagarMeAndroid cvv(String value) {
         mRequest.setCvv(value);
         return this;
     }
 
-    public PagarMeWebhook telephone(String value) {
+    public PagarMeAndroid telephone(String value) {
         mRequest.setTelephone(value);
         return this;
     }
 
 
-    public PagarMeWebhook ddd(String value) {
+    public PagarMeAndroid ddd(String value) {
         mRequest.setDdd(value);
         return this;
     }

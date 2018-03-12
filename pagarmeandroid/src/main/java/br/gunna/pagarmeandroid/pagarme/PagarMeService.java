@@ -1,4 +1,4 @@
-package br.gunna.pagarmewebhook.pagarme;
+package br.gunna.pagarmeandroid.pagarme;
 
 
 /**

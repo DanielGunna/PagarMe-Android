@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PagarMe-AndroidWebhook.iml" filepath="$PROJECT_DIR$/PagarMe-AndroidWebhook.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pagarmewebhook/pagarmewebhook.iml" filepath="$PROJECT_DIR$/pagarmewebhook/pagarmewebhook.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagarmeandroid/pagarmewebhook.iml" filepath="$PROJECT_DIR$/pagarmeandroid/pagarmewebhook.iml" />
     </modules>
   </component>
 </project>

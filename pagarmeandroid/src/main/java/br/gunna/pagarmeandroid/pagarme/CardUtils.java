@@ -1,4 +1,4 @@
-package br.gunna.pagarmewebhook.pagarme;
+package br.gunna.pagarmeandroid.pagarme;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'br.gunna.pagarmewebhook'
+group = 'br.gunna.pagarmeandroid'
 version = '1.0'
 android {
     compileSdkVersion 26

@@ -31,7 +31,11 @@ public class PagarMeAndroid {
 
 
     public static void initialize(String key) {
-        sInstance = new PagarMeAndroid(key);
+        if (!TextUtils.isEmpty(key))
+            sInstance = new PagarMeAndroid(key);
+        else
+            throw new RuntimeException("You must provide a " +
+                    " non-empty PagarMe api key !! ");
     }
 
 

@@ -1,8 +1,9 @@
-package br.gunna.pagarmewebhook;
+package br.gunna.pagarmeandroid;
 
 import org.junit.Test;
 
-import br.gunna.pagarmewebhook.pagarme.PagarMeWebhook;
+import br.gunna.pagarmeandroid.pagarme.PagarMeAndroid;
+
 
 import static org.junit.Assert.*;
 
@@ -13,7 +14,13 @@ import static org.junit.Assert.*;
  */
 public class PagarMeAndroidUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void check_initialization_verification() throws Exception {
+
+    }
+
+
+    @Test
+    public void check_empty_api_key() throws Exception {
+        
     }
 }

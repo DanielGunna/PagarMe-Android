@@ -1,4 +1,4 @@
-# PagarMe-Android
+# [PagarMe-Android](https://danielgunna.github.io/PagarMe-Android/)
 
 [![Release](https://jitpack.io/v/danielgunna/PagarMe-Android.svg)](https://jitpack.io/#danielgunna/PagarMe-Android)
 

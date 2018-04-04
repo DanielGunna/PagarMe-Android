@@ -9,6 +9,10 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
+import br.gunna.pagarmeandroid.pagarme.exception.EmptyFieldException;
+import br.gunna.pagarmeandroid.pagarme.exception.InitializationException;
+import br.gunna.pagarmeandroid.pagarme.exception.InvalidCardNumberException;
+import br.gunna.pagarmeandroid.pagarme.exception.InvalidKeyException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,15 +38,13 @@ public class PagarMeAndroid {
         if (!TextUtils.isEmpty(key))
             sInstance = new PagarMeAndroid(key);
         else
-            throw new RuntimeException("You must provide a " +
-                    " non-empty PagarMe api key !! ");
+            throw InvalidKeyException.get();
     }
 
 
     public static PagarMeAndroid getsInstance() {
         if (sInstance == null)
-            throw new RuntimeException("You must initialize calling" +
-                    " PagarMeAndroid.initialize(apiKey) !!!");
+            throw InitializationException.get();
         return sInstance;
     }
 
@@ -86,8 +88,7 @@ public class PagarMeAndroid {
             if (checkFieldsRequest(listener))
                 generateKeyHash(listener);
         } else
-            listener.onError(new RuntimeException("You must provide a valid" +
-                    " non-empty PagarMe api key !! "));
+            listener.onError(InvalidKeyException.get());
     }
 
     private boolean checkFieldsRequest(PagarMeListener listener) {
@@ -113,7 +114,7 @@ public class PagarMeAndroid {
         }
 
         if (CardUtils.checkCreditCard(mRequest.getNumber())) {
-            listener.onError(new RuntimeException(new Throwable("Invalid card number !!")));
+            listener.onError(InvalidCardNumberException.get());
             return false;
         }
 
@@ -121,7 +122,7 @@ public class PagarMeAndroid {
     }
 
     private Exception getEmptyFieldException(String field) {
-        return new RuntimeException(new Throwable("Field " + field + "cant be empty!!"));
+        return EmptyFieldException.get(field);
     }
 
     private Exception getUnexpectedErrorException() {

@@ -3,11 +3,19 @@ package br.gunna.pagarmeandroid.pagarme;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Locale;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import br.gunna.pagarmeandroid.pagarme.exception.EmptyFieldException;
 import br.gunna.pagarmeandroid.pagarme.exception.InitializationException;
@@ -138,7 +146,10 @@ public class PagarMeAndroid {
                     try {
                         if (response.body() != null) {
                             final String cardHash = buildCardHash(response.body());
-                            listener.onSuccess(mRequest, response.body(), cardHash);
+                            if (!TextUtils.isEmpty(cardHash))
+                                listener.onSuccess(mRequest, response.body(), cardHash);
+                            else
+                                listener.onError(getCardHashError());
                         } else {
                             listener.onError(getUnexpectedErrorException());
                         }
@@ -162,26 +173,70 @@ public class PagarMeAndroid {
         });
     }
 
+    private Exception getCardHashError() {
+        return new RuntimeException("Unknown error generating card hash!!");
+    }
+
 
     private void getPublicKey(Callback<PagarMeResponse> callbackApi) {
         mApiService.getKeyHash(mKey).enqueue(callbackApi);
     }
 
-    private String buildCardHash(PagarMeResponse publicKeyResponse)
-            throws Exception {
-        final long publicKeyId = publicKeyResponse.getId();
-        final String publicKey = publicKeyResponse.getPublicKey();
-        final String cardData = String.format("card_number=%s"
-                        + "&card_holder_name=%s"
-                        + "&card_expiration_date=%s"
-                        + "&card_cvv=%s"
-                        + "&brand=%s",
-                mRequest.getNumber(), mRequest.getHolderName(), mRequest.getExpirationDate(),
-                mRequest.getCvv(), mRequest.getBrand());
-        final String encryptedData = encrypt(cardData, publicKey);
-        return String.format("%s_%s", publicKeyId, encryptedData);
-    }
+    private String buildCardHash(PagarMeResponse publicKeyResponse) {
+        try {
+            Cipher cipher = Cipher.getInstance("RSA/None/PKCS1PADDING");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            int cardHashId = (int) publicKeyResponse.getId();
+            String rawPublicKey = publicKeyResponse.getPublicKey();
 
+            //PAGARME PUBLIC KEYS COME IN PEM FORMAT, SO WE NEED TO CONVERT'EM
+            //TO DER FORMAT SO THAT THEY CAN PLAY NICE WITH X509EncodedKeySpec.
+            rawPublicKey = rawPublicKey
+                    .replaceAll("\\s*-----BEGIN PUBLIC KEY-----\\s*", "")
+                    .replaceAll("\\s*-----END PUBLIC KEY-----\\s*", "")
+                    .replaceAll("\\s", "")
+                    .replaceAll("[\n]", "")
+                    .replaceAll("[\r]", "")
+                    .replaceAll("[\t]", "")
+                    .replaceAll("[ ]", "");
+
+            byte[] decodedPublicKey = Base64.decode(rawPublicKey, 0);
+
+            //SUCCESSFULLY CONVERTED THE PUBLIC KEY TO DER FORMAT.
+
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(decodedPublicKey);
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            //NOW FORMATTING CARD INFORMATION IN THE FORMAT EXPECTED BY PAGARME.
+
+            String cardInformation = String.format(Locale.US,
+                    "card_number=%s&card_holder_name=%s&card_expiration_date=%s"
+                            + "&card_cvv=%s", mRequest.getNumber().replace(" ", "").trim(),
+                    URLEncoder.encode(mRequest.getHolderName().trim(), "UTF-8").replace("+", "%20"),
+                    mRequest.getExpirationDate().replace("/", "").trim(), mRequest.getCvv().trim());
+
+            //THEN WE USE OUR CIPHER TO ENCRYPT AND THEN BASE64-ENCODE THE CARD INFORMATION,
+            //AND FINALLY, APPEND THE ASSIGNED CARD ID AS PREFIX OF THE RESULT TO COMPOSE THE CARD HASH.
+
+            byte[] encryptedCardInformation = cipher.doFinal(cardInformation.getBytes("UTF-8"));
+            return String.format(Locale.US, "%d_%s", cardHashId,
+                    (Base64.encodeToString(encryptedCardInformation, Base64.DEFAULT)))
+                    .replaceAll("\\s", "");
+
+            //NOW YOU MIGHT WANT TO SEND THE CARD HASH TO YOUR BACKEND SERVER.
+
+        } catch (InvalidKeySpecException | java.security.InvalidKeyException invalidKey) {
+            //PROBLEMS WITH THE PUBLIC KEY RECEIVED FROM PAGARME.
+        } catch (BadPaddingException | IllegalBlockSizeException | IOException encryptionException) {
+            //I/O ERRORS HAPPENED WHILE TRYING TO ENCRYPT CARD INFORMATION.
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     private String encrypt(String plain, String publicKey) throws Exception {
         final String pubKeyPEM = publicKey.replace("-----BEGIN PUBLIC KEY-----\n", "")

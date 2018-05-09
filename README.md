@@ -12,9 +12,9 @@ Para configurar basta adicionar a depêndencia no arquivo de configuração grad
 
 ```groovy
 dependencies {
-	  compile 'com.github.danielgunna:PagarMe-Android:0.0.1'
+	  compile 'com.github.danielgunna:PagarMe-Android:v0.0.2'
           //usando Gradle 3.+
-          implementation 'com.github.danielgunna:PagarMe-Android:0.0.1'
+          implementation 'com.github.danielgunna:PagarMe-Android:v0.0.2'
 }
 ```
 # Como usar ?

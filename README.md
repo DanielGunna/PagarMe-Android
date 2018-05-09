@@ -32,8 +32,8 @@ PagarMeAndroid.getsInstance()
      .generateCardHash(new PagarMeAndroid.PagarMeListener() {
          @Override
          public void onSuccess(PagarMeRequest pagarMeRequest, 
-                             PagarMeResponse pagarMeResponse, String s) {
-            Log.d("CardHash generated : ", s);
+                             PagarMeResponse pagarMeResponse, String cardHash) {
+            Log.d("CardHash generated : ", cardHash);
          }
 
          @Override

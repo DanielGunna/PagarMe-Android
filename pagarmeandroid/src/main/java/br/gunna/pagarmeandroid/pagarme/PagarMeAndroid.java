@@ -25,6 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.text.TextUtils.isEmpty;
+import static br.gunna.pagarmeandroid.pagarme.CardUtils.isValidCardNumber;
+
 /**
  * Created by Gunna on 08/03/2018.
  */
@@ -43,7 +46,7 @@ public class PagarMeAndroid {
 
 
     public static void initialize(String key) {
-        if (!TextUtils.isEmpty(key))
+        if (!isEmpty(key))
             sInstance = new PagarMeAndroid(key);
         else
             throw InvalidKeyException.get();
@@ -92,7 +95,7 @@ public class PagarMeAndroid {
 
 
     public void generateCardHash(PagarMeListener listener) {
-        if (!TextUtils.isEmpty(mKey)) {
+        if (!isEmpty(mKey)) {
             if (checkFieldsRequest(listener))
                 generateKeyHash(listener);
         } else
@@ -100,28 +103,28 @@ public class PagarMeAndroid {
     }
 
     private boolean checkFieldsRequest(PagarMeListener listener) {
-        if (TextUtils.isEmpty(mRequest.getNumber())) {
+        if (isEmpty(mRequest.getNumber())) {
             listener.onError(getEmptyFieldException("Card number"));
             return false;
         }
-        if (TextUtils.isEmpty(mRequest.getHolderName())) {
+        if (isEmpty(mRequest.getHolderName())) {
             listener.onError(getEmptyFieldException("Holder name"));
             return false;
         }
-        if (TextUtils.isEmpty(mRequest.getExpirationDate())) {
+        if (isEmpty(mRequest.getExpirationDate())) {
             listener.onError(getEmptyFieldException("Expiration date"));
             return false;
         }
-        if (TextUtils.isEmpty(mRequest.getCvv())) {
+        if (isEmpty(mRequest.getCvv())) {
             listener.onError(getEmptyFieldException("CVV"));
             return false;
         }
-        if (TextUtils.isEmpty(mRequest.getBrand())) {
+        if (isEmpty(mRequest.getBrand())) {
             listener.onError(getEmptyFieldException("Brand"));
             return false;
         }
 
-        if (CardUtils.checkCreditCard(mRequest.getNumber())) {
+        if (!isValidCardNumber(mRequest.getNumber())) {
             listener.onError(InvalidCardNumberException.get());
             return false;
         }
@@ -146,7 +149,7 @@ public class PagarMeAndroid {
                     try {
                         if (response.body() != null) {
                             final String cardHash = buildCardHash(response.body());
-                            if (!TextUtils.isEmpty(cardHash))
+                            if (!isEmpty(cardHash))
                                 listener.onSuccess(mRequest, response.body(), cardHash);
                             else
                                 listener.onError(getCardHashError());

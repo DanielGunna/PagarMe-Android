@@ -1,1 +1,1 @@
-include ':pagarmeandroid'
+include ':pagarmeandroid', ':testaplication'

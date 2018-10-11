@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pagarmeandroid" />
+            <option value="$PROJECT_DIR$/testaplication" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

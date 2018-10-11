@@ -62,7 +62,7 @@ public class CardUtils {
     }
 
 
-    public static boolean checkCreditCard(String ccNumber) {
+    public static boolean isValidCardNumber(String ccNumber) {
         try {
             int sum = 0;
             boolean alternate = false;

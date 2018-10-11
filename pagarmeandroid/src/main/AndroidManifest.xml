@@ -1,2 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.gunna.pagameandroid" />
+    package="br.gunna.pagameandroid">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <activity android:name="br.gunna.pagarmeandroid.pagarme.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

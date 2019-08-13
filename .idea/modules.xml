@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PagarMe-Android.iml" filepath="$PROJECT_DIR$/PagarMe-Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PagarMe-Android.iml" filepath="$PROJECT_DIR$/PagarMe-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/pagarmeandroid/pagarmeandroid.iml" filepath="$PROJECT_DIR$/pagarmeandroid/pagarmeandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagarmeandroid/pagarmeandroid.iml" filepath="$PROJECT_DIR$/pagarmeandroid/pagarmeandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testaplication/testaplication.iml" filepath="$PROJECT_DIR$/testaplication/testaplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/testaplication/testaplication.iml" filepath="$PROJECT_DIR$/testaplication/testaplication.iml" />
     </modules>
   </component>

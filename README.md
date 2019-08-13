@@ -12,11 +12,24 @@ Para configurar basta adicionar a depêndencia no arquivo de configuração grad
 
 ```groovy
 dependencies {
-	  compile 'com.github.danielgunna:PagarMe-Android:v0.0.3'
+	  compile 'com.github.danielgunna:PagarMe-Android:0.0.3'
           //usando Gradle 3.+
-          implementation 'com.github.danielgunna:PagarMe-Android:v0.0.3'
+          implementation 'com.github.danielgunna:PagarMe-Android:0.0.3'
 }
 ```
+
+No arquivo gradle do projeto adicionar o repositório do jitpack:
+
+
+```groovy
+repositories {
+    google()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+  
+```
+
 # Como usar ?
 
 Para gerar um card hash para um cartão basta fazer como o trecho abaixo:
